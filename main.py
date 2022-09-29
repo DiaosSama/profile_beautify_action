@@ -52,6 +52,7 @@ if __name__ == "__main__":
 
     if STEAM_API_KEY is not None and STEAM_USER_ID64 is not None and STEAM_GAME_LIMIT > 0:
         print("STEAM_GAME_LIMIT: " + str(STEAM_GAME_LIMIT))
+        new_readme = social.generate_steam_game(STEAM_API_KEY, STEAM_USER_ID64, STEAM_GAME_LIMIT, new_readme)
 
     if new_readme == old_readme:
         print("nothing changed")
