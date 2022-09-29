@@ -1,0 +1,4 @@
+feedparser
+datetime
+PyGithub
+requests
