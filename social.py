@@ -61,6 +61,9 @@ def generate_steam_game(steam_api_key, steam_id, limit, readme) -> str:
             steam_api_key, steam_id
         )
     )
+    print(steam_api_key)
+    print(steam_id)
+    print(r.text)
     recent_games = [
         {
             "url": "https://store.steampowered.com/app/" + str(item["appid"]),
