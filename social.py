@@ -75,7 +75,7 @@ def generate_steam_game(steam_api_key, steam_id, limit, readme) -> str:
     ]
 
     content = "\n".join(
-        ["* <a href='{url}' target='_blank'>{name}</a> - 最近游戏时长: {playtime_2weeks} h - 总时长: {playtime_forever}".format(**item) for item in recent_games]
+        ["* <a href='{url}' target='_blank'>{name}</a> - 最近游戏时长: {playtime_2weeks} h - 总时长: {playtime_forever} h".format(**item) for item in recent_games]
     )
 
     return generate_new_readme(STEAM_GAME_START_COMMENT, STEAM_GAME_END_COMMENT, content, readme)
