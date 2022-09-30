@@ -13,6 +13,9 @@ DOUBAN_END_COMMENT = '<!-- END_SECTION:douban -->'
 STEAM_GAME_START_COMMENT = '<!-- START_SECTION:steam_game -->'
 STEAM_GAME_END_COMMENT = '<!-- END_SECTION:steam_game -->'
 
+STEAM_LABEL_START_COMMET = '<!-- START_SECTION:steam_label -->'
+STEAM_LABEL_END_COMMENT = '<!-- END_SECTION:steam_label -->'
+
 
 def generate_blog(rss_link, limit, readme) -> str:
     """Generate blog"""
@@ -61,27 +64,33 @@ def generate_steam_game(steam_api_key, steam_id, limit, readme) -> str:
             steam_api_key, steam_id
         )
     )
-    print(steam_api_key)
-    print(steam_id)
-    print(r.text)
     recent_games = [
         {
             "url": "https://store.steampowered.com/app/" + str(item["appid"]),
             "name": item["name"],
-            "playtime_2weeks": format(item["playtime_2weeks"] / 60, ".2f")
+            "playtime_2weeks": format(item["playtime_2weeks"] / 60, ".2f"),
+            "playtime_forever": format(item["playtime_forever"] / 60, ".2f")
         }
         for item in r.json()["response"]["games"][:limit]
     ]
 
     content = "\n".join(
-        ["* <a href='{url}' target='_blank'>{name}</a> - 最近游戏时长: {playtime_2weeks} h".format(**item) for item in recent_games]
+        ["* <a href='{url}' target='_blank'>{name}</a> - 最近游戏时长: {playtime_2weeks} h - 总时长: {playtime_forever}".format(**item) for item in recent_games]
     )
 
     return generate_new_readme(STEAM_GAME_START_COMMENT, STEAM_GAME_END_COMMENT, content, readme)
 
 
-def generate_steam_icon_url() -> str:
-    pass
+def generate_steam_icon_url(steam_api_key, steam_id, readme) -> str:
+    r = requests.get(
+        "https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key={0}&steamid={1}".format(
+            steam_api_key, steam_id
+        )
+    )
+    game_count = r.json()["response"]["game_count"]
+    content = '<img src="https://img.shields.io/badge/Steam-{}%20Games-0b1a37?' \
+              'logo=steam&labelColor=134375&longCache=true" />'.format(str(game_count))
+    return generate_new_readme(STEAM_LABEL_START_COMMET, STEAM_LABEL_END_COMMENT, content, readme)
 
 
 def generate_new_readme(start_comment: str, end_comment: str, content: str, readme: str) -> str:
